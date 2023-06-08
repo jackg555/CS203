@@ -32,6 +32,17 @@ app = Flask (__name__)
 def main():
     return render_template('addfood.html')
 
+@app.route('/viewfood', methods=['GET'])
+def viewFood():
+    conn = sqlite3.connect('groceries.sqlite')
+    cursor = conn.cursor()
+
+    sql_fetch_query = """SELECT * FROM groceries"""
+    cursor.execute(sql_fetch_query)
+    groceries = cursor.fetchall()
+
+    return render_template('viewfood.html', food_content = groceries)
+
 @app.route('/addfood', methods=['POST'])
 def addFood():
     conn = sqlite3.connect('groceries.sqlite')

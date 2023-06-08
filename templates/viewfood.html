@@ -5,6 +5,17 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1>List of Food</h1>
+<ul>
+    {% for food in food_content %}
+        <li>{{ food[1] }}</li>
+    {% endfor %}
+</ul>
+<h1>List of Countdown Prices</h1>
+<ul>
+    {% for food in food_content %}
+        <li>{{ food[2] }}</li>
+    {% endfor %}
+</ul>
 </body>
 </html>
