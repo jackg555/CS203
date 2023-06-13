@@ -5,14 +5,17 @@ cursor = conn.cursor()
 
 sql_query = """CREATE TABLE IF NOT EXISTS Items (
         iid integer NOT NULL, 
-        iname text NOT NULL, 
+        iname text NOT NULL,
+        ipricingtype text NOT NULL,
         primary key (iid)
         );"""
 cursor.execute(sql_query)
 
 sql_query = """CREATE TABLE IF NOT EXISTS Supermarkets (
         sid integer NOT NULL, 
-        sname text NOT NULL, 
+        sname text NOT NULL,
+        slocation text NOT NULL,
+        snumber integer NOT NULL,
         primary key (sid)
         );"""
 cursor.execute(sql_query)

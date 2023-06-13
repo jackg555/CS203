@@ -11,7 +11,7 @@ def main():
     cursor.execute(sql_fetch_query)
     Lists = cursor.fetchall()
 
-    return render_template('addlist.html', list_content = Lists)
+    return render_template('index.html', list_content = Lists)
 
 @app.route('/viewlistjson', methods=['GET'])
 def viewFoodJson():

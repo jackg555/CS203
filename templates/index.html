@@ -5,7 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-    <h2>Welcome to Flask</h2>
-<p>This is how Flask serves the web content</p>
+<h1>List of Shopping Lists</h1>
+<ul>
+    {% for list in list_content %}
+        <li>{{ list[1] }} - {{ list[2] }}</li>
+    {% endfor %}
+</ul>
+    <form action = "http://127.0.0.1:5000/addlist" method = "POST">
+        <label for="lname">List Name</label>
+        <input type="text" name="lname" id="lname">
+        </br>
+        </br>
+        </br>
+        <label for="ldate">Date</label>
+        <input type="date" name="ldate" id="ldate" >
+        </br>
+        </br>
+        </br>
+        <button type="submit">Add List</button>
+    </form>
 </body>
 </html>
