@@ -31,10 +31,12 @@ cursor.execute(sql_query)
 sql_query = """CREATE TABLE IF NOT EXISTS SupermarketsItems (
         iid integer NOT NULL, 
         sid integer NOT NULL, 
-        price text NOT NULL, 
+        price text NOT NULL,
+        ipricingtype NOT NULL,
         primary key (iid), 
-        foreign key (iid) references Items(iid), 
-        foreign key (sid) references Supermarkets(sid)
+        foreign key (iid) references Items(iid),  
+        foreign key (sid) references Supermarkets(sid),
+        foreign key (ipricingtype) references Items(ipricingtype)
         );"""
 cursor.execute(sql_query)
 
