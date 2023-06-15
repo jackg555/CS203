@@ -5,11 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>Food</h1>
-    </br>
-    {% for item in items_content %}
-        {{ item[1] }}
-    </br>
-    {% endfor %}
+    <h1>Available Food</h1>
+    <ul>
+        {% for item in items_content %}
+            <li>{{ item[1] }}</li>
+        </br>
+        {% endfor %}
+    </ul>
 </body>
 </html>
