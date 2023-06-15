@@ -6,7 +6,7 @@ cursor = conn.cursor()
 sql_query = """CREATE TABLE IF NOT EXISTS Items (
         iid integer NOT NULL, 
         iname text NOT NULL,
-        iquantity NOT NULL,
+        iquantity text NOT NULL,
         ipricetype text NOT NULL,
         primary key (iid)
         );"""
@@ -33,13 +33,11 @@ sql_query = """CREATE TABLE IF NOT EXISTS SupermarketsItems (
         iid integer NOT NULL, 
         sid integer NOT NULL, 
         price text NOT NULL,
-        iquantity NOT NULL,
-        ipricetype NOT NULL,
+        iquantity text NOT NULL,
+        ipricetype text NOT NULL,
         primary key (iid), 
-        foreign key (iid) references Items(iid),  
-        foreign key (sid) references Supermarkets(sid),
-        foreign key (iquantity) references Items(iquantity),
-        foreign key (ipricetype) references Items(ipricetype)
+        foreign key (iid, iquantity, ipricetype) references Items(iid, iquantity, ipricetype),  
+        foreign key (sid) references Supermarkets(sid)
         );"""
 cursor.execute(sql_query)
 

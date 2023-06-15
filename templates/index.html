@@ -5,12 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-<h1>List of Shopping Lists</h1>
-<ul>
-    {% for list in list_content %}
-        <li>{{ list[1] }} - {{ list[2] }}</li>
-    {% endfor %}
-</ul>
+    <h1>List of Shopping Lists</h1>
+    <ul>
+        {% for list in list_content %}
+            <li>
+                <a href="http://127.0.0.1:5000/list/{{ list[0] }}">{{ list[1] }} - {{ list[2] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
     <form action = "http://127.0.0.1:5000/addlist" method = "POST">
         <label for="lname">List Name</label>
         <input type="text" name="lname" id="lname">
