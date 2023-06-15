@@ -19,6 +19,7 @@ INSERT INTO Supermarkets (sid, sname, slocation, snumber)
 VALUES (1, 'New World', 'Ilam', 033435646), (2, 'Packnsave', 'Riccarton', 033489727), (3, 'Countdown', 'Avonhead', 033584765);
 
 BASIC QUERY:
+
 INSERT INTO Items (iid, iname, iquantity, ipricetype) VALUES (1, 'Mince', 'kg', 'kg');
 
 INSERT INTO Supermarkets (sid, sname, slocation, snumber) VALUES (1, 'New World', 'Ilam', 033435646);
