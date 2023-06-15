@@ -51,11 +51,19 @@ def viewFood():
 
 @app.route('/list/<int:list_id>', methods=['GET'])
 def dispList(list_id):
+    #supermarket is set to new world (supermarket = 1)
+    supermarket = 1
+
     conn = sqlite3.connect('shoppingDB.sqlite')
     cursor = conn.cursor()
 
-    sql_fetch_query = """SELECT iname, iquantity FROM ListsItems li, Items i WHERE li.lid=? AND li.iid=i.iid"""
-    cursor.execute(sql_fetch_query, (list_id,))
+    sql_fetch_query = """SELECT iname, iquantity, price FROM ListsItems li, Items i, SupermarketsItems si
+    WHERE li.lid=? 
+    AND li.iid=i.iid 
+    AND li.iid=si.iid
+    AND si.sid=?
+    """
+    cursor.execute(sql_fetch_query, (list_id,supermarket,))
     ListsItems = cursor.fetchall()
 
     sql_fetch_query = """SELECT lname, ldate FROM Lists WHERE lid=?"""

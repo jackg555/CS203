@@ -8,7 +8,7 @@
 <h1>{{ list_name[0][0] }} </br> {{ list_name[0][1] }}</h1>
 <ui>
     {% for list_items in list_items_content %}
-        <li>{{ list_items[0] }}</li>
+        <li>Item: {{ list_items[0] }} </br> Quantity: {{ list_items[1] }} </br> Price: ${{ list_items[2] }}</li>
     {% endfor %}
 </ui>
 <a href="http://127.0.0.1:5000/viewfood">Add Item</a>
