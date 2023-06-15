@@ -1,5 +1,6 @@
 # CS203
 ----EXECUTE LINE BY LINE----
+
 To Create Database and Tables:
 python db.py
 
