@@ -35,7 +35,7 @@ sql_query = """CREATE TABLE IF NOT EXISTS SupermarketsItems (
         price text NOT NULL,
         iquantity text NOT NULL,
         ipricetype text NOT NULL,
-        primary key (iid), 
+        primary key (iid, sid), 
         foreign key (iid, iquantity, ipricetype) references Items(iid, iquantity, ipricetype),  
         foreign key (sid) references Supermarkets(sid)
         );"""
@@ -44,8 +44,8 @@ cursor.execute(sql_query)
 sql_query = """CREATE TABLE IF NOT EXISTS ListsItems (
         lid integer NOT NULL, 
         iid integer NOT NULL, 
-        lquantity text NOT NULL, 
-        primary key (lid), 
+        lquantity integer NOT NULL, 
+        primary key (lid, iid), 
         foreign key (lid) references Lists(lid), 
         foreign key (iid) references Items(iid)
         );"""

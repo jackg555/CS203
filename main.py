@@ -54,16 +54,11 @@ def dispList(list_id):
     conn = sqlite3.connect('shoppingDB.sqlite')
     cursor = conn.cursor()
 
-    #fix "lid=1" as this needs to be list_id not 1
-    sql_fetch_query = """SELECT * FROM ListsItems WHERE lid=1"""
+    sql_fetch_query = """SELECT iname, iquantity FROM ListsItems, Items WHERE lid=1 AND ListsItems.iid=Items.iid"""
     cursor.execute(sql_fetch_query)
     ListsItems = cursor.fetchall()
 
-    sql_fetch_query = """SELECT * FROM Items"""
-    cursor.execute(sql_fetch_query)
-    Items = cursor.fetchall()
-
-    return render_template('dispList.html', list_items_content=ListsItems, items_content=Items)
+    return render_template('dispList.html', list_items_content=ListsItems)
 
 if __name__ == '__main__':
     app.run(debug=True)
