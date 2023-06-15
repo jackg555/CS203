@@ -57,12 +57,13 @@ def dispList(list_id):
     conn = sqlite3.connect('shoppingDB.sqlite')
     cursor = conn.cursor()
 
-    sql_fetch_query = """SELECT iname, iquantity, price FROM ListsItems li, Items i, SupermarketsItems si
+    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype FROM ListsItems li, Items i, SupermarketsItems si
     WHERE li.lid=? 
     AND li.iid=i.iid 
     AND li.iid=si.iid
     AND si.sid=?
     """
+
     cursor.execute(sql_fetch_query, (list_id,supermarket,))
     ListsItems = cursor.fetchall()
 
