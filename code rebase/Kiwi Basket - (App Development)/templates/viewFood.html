@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <h1>Available Food</h1>
+{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for item in items_content %}
+            <li>{{ item[1] }}</li>
+        {% endfor %}
+    </ul>
+
+    <footer></footer>
+{% endblock %}
