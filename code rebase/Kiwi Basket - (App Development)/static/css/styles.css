@@ -13,7 +13,7 @@ body {
   width: 100%;
 }
 .head-container .logo-banner {
-  width: 230px;
+  width: 250px;
   height: 85px;
   border-radius: 0 50px 50px 0;
   background: white;
@@ -28,6 +28,12 @@ body {
   padding-left: 20px;
   font-size: larger;
   line-height: 0.5em;
+}
+.head-container .logo-banner .logo-title h1 {
+  letter-spacing: 0.2em;
+}
+.head-container .logo-banner .logo-title h3 {
+  letter-spacing: 0.18em;
 }
 
 footer {
