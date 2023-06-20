@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <div class="head-container">
+        <div class="logo-banner">
+            <img src="{{ url_for('static', filename='images/Slice 1.svg') }}" alt="Kiwi Basket Logo">
+            <div class="logo-title">
+                <h1>KIWI</h1>
+                <h3>BASKET</h3>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for list in list_content %}
+            <li>
+                <a href="{{ url_for('disp_list', list_id=list[0]) }}">{{ list[1] }} - {{ list[2] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <form action="{{ url_for('add_list') }}" method="POST">
+        <label for="lname">List Name:</label>
+        <input type="text" name="lname" id="lname">
+        <br><br>
+        <label for="ldate">Date:</label>
+        <input type="date" name="ldate" id="ldate">
+        <br><br>
+        <button type="submit">Add List</button>
+    </form>
+
+    <footer>
+
+    </footer>
+{% endblock %}

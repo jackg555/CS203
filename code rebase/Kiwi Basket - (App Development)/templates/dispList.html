@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>{{ list_name[0][1] }} </br> {{ list_name[0][2] }}</h1>
+<ui>
+    {% for list_items in list_items_content %}
+        <li>Item: {{ list_items[0] }}
+            {{ list_items[1] }}
+            </br> Price: ${{ list_items[2]}}
+            {% if list_items[3] == "kg" %}
+                /{{ list_items[3] }}
+            {% endif %}
+            {% if list_items[3] == "ea" %}
+                /{{ list_items[3] }}
+            {% endif %}
+            </br> Quantity: {{list_items[4]}}
+        </li>
+        </br>
+    {% endfor %}
+</ui>
+<a href="http://127.0.0.1:5000/viewfood/{{ list_name[0][0] }}">Add Item</a>
+</body>
+</html>
