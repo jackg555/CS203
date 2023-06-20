@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>{{ list_name[0][0] }} </br> {{ list_name[0][1] }}</h1>
+<h1>{{ list_name[0][1] }} </br> {{ list_name[0][2] }}</h1>
 <ui>
     {% for list_items in list_items_content %}
         <li>Item: {{ list_items[0] }}
@@ -17,10 +17,11 @@
             {% if list_items[3] == "ea" %}
                 /{{ list_items[3] }}
             {% endif %}
+            </br> Quantity: {{list_items[4]}}
         </li>
         </br>
     {% endfor %}
 </ui>
-<a href="http://127.0.0.1:5000/viewfood">Add Item</a>
+<a href="http://127.0.0.1:5000/viewfood/{{ list_name[0][0] }}">Add Item</a>
 </body>
 </html>

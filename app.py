@@ -5,6 +5,8 @@ from flask import Flask, request, render_template
 app = Flask(__name__)
 
 db_path = os.path.join(app.root_path, 'instance', 'shoppingDB.sqlite')
+
+
 @app.route('/', methods=['GET'])
 def main():
     conn = sqlite3.connect(db_path)
@@ -15,6 +17,7 @@ def main():
     lists = cursor.fetchall()
 
     return render_template('index.html', list_content=lists)
+
 
 @app.route('/addlist', methods=['POST', 'GET'])
 def add_list():
@@ -72,7 +75,7 @@ def disp_list(list_id):
 
         if count == 0:
             sql_query = """INSERT INTO ListsItems (lid, iid, lquantity) VALUES (?, ?, 1)"""
-            cursor.execute(sql_query, (list_id, food_id),)
+            cursor.execute(sql_query, (list_id, food_id), )
         else:
             update_query = """UPDATE ListsItems SET lquantity = lquantity + 1 WHERE lid = ? AND iid = ?"""
             cursor.execute(update_query, (list_id, food_id))
@@ -83,7 +86,8 @@ def disp_list(list_id):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity FROM ListsItems li, Items i, SupermarketsItems si
+    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity FROM ListsItems li, Items i, 
+    SupermarketsItems si
     WHERE li.lid=? 
     AND li.iid=i.iid 
     AND li.iid=si.iid
@@ -100,6 +104,7 @@ def disp_list(list_id):
     conn.close()
 
     return render_template('dispList.html', list_items_content=lists_items, list_name=list_name)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
