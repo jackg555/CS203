@@ -59,6 +59,7 @@ def view_food(list_id):
 @app.route('/list/<int:list_id>', methods=['POST', 'GET'])
 def disp_list(list_id):
     supermarket = 1
+    total_price = 0
 
     if request.method == 'POST':
         conn = sqlite3.connect(db_path)
@@ -97,9 +98,14 @@ def disp_list(list_id):
     cursor.execute(sql_fetch_query, (list_id,))
     list_name = cursor.fetchall()
 
+    for list_items in lists_items:
+        quantity = int(list_items[4])
+        price = int(list_items[2])
+        total_price += (price*quantity)
+
     conn.close()
 
-    return render_template('dispList.html', list_items_content=lists_items, list_name=list_name)
+    return render_template('dispList.html', list_items_content=lists_items, list_name=list_name, total_price=total_price)
 
 if __name__ == '__main__':
     app.run(debug=True)
