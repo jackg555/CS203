@@ -62,7 +62,7 @@ def add_list():
     }
 
     sql_query = """INSERT INTO lists (lname, ldate) VALUES (?, ?)"""
-    cursor.execute(sql_query, (data_model['lname'], data_model['ldate']))
+    cursor.execute(sql_query, (data_model['lname'], data_model['ldate']),)
     conn.commit()
     conn.close()
 
@@ -98,24 +98,24 @@ def disp_list(list_id):
         food_id = request.form.get('iid')
 
         check_query = """SELECT COUNT(*) FROM ListsItems WHERE lid = ? AND iid = ?"""
-        cursor.execute(check_query, (list_id, food_id))
+        cursor.execute(check_query, (list_id, food_id),)
         count = cursor.fetchone()[0]
 
         pricetype_query = """SELECT ipricetype FROM Items WHERE iid = ?"""
         cursor.execute(pricetype_query, (food_id,))
         ipricetype = cursor.fetchone()[0]
 
-        if count == 0:
-            if ipricetype == 'kg':
-                default_quantity = 0.1
-            elif ipricetype == 'ea':
-                default_quantity = 1
+        if ipricetype == 'kg':
+            default_quantity = 0.1
+        elif ipricetype == 'ea':
+            default_quantity = 1
 
+        if count == 0:
             sql_query = """INSERT INTO ListsItems (lid, iid, lquantity) VALUES (?, ?, ?)"""
             cursor.execute(sql_query, (list_id, food_id, default_quantity),)
         else:
-            update_query = """UPDATE ListsItems SET lquantity = lquantity + 1 WHERE lid = ? AND iid = ?"""
-            cursor.execute(update_query, (list_id, food_id))
+            update_query = """UPDATE ListsItems SET lquantity = lquantity + ? WHERE lid = ? AND iid = ?"""
+            cursor.execute(update_query, (default_quantity, list_id, food_id),)
 
         conn.commit()
         conn.close()
@@ -142,10 +142,14 @@ def update_quantity(list_id):
 
     updated_quantity = quantity + update_quantity
 
-    update_query = """UPDATE ListsItems SET lquantity = ? WHERE iid=? AND lid=?"""
-    cursor.execute(update_query, (updated_quantity, item_id, list_id),)
-    conn.commit()
+    if updated_quantity <= 0.001:
+        delete_query = """DELETE FROM ListsItems WHERE iid=? AND lid=?"""
+        cursor.execute(delete_query, (item_id, list_id),)
+    else:
+        update_query = """UPDATE ListsItems SET lquantity = ? WHERE iid=? AND lid=?"""
+        cursor.execute(update_query, (updated_quantity, item_id, list_id),)
 
+    conn.commit()
     conn.close()
 
     lists_items, list_name, total_price = fetch_list_items(list_id)
