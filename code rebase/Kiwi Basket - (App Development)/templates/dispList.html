@@ -17,7 +17,14 @@
             {% if list_items[3] == "ea" %}
                 /{{ list_items[3] }}
             {% endif %}
-            </br> Quantity: {{list_items[4]}}
+            </br>
+            <form action = "http://127.0.0.1:5000/updatequantity/{{list_id}}" method="POST">
+                <input type="hidden" name="iid" value="{{ list_items[5] }}">
+                Quantity:
+                <button type="submit" name="update" value="1">+</button>
+                {{list_items[4]}}
+                <button type="submit" name="update" value="-1">-</button>
+            </form>
         </li>
         </br>
     {% endfor %}

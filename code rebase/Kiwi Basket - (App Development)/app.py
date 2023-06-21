@@ -5,6 +5,37 @@ from flask import Flask, request, render_template
 app = Flask(__name__)
 
 db_path = os.path.join(app.root_path, 'instance', 'shoppingDB.sqlite')
+
+def fetch_list_items(list_id):
+    supermarket = 1
+
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity, li.iid
+        FROM ListsItems li, Items i, SupermarketsItems si
+        WHERE li.lid=? 
+        AND li.iid=i.iid 
+        AND li.iid=si.iid
+        AND si.sid=?
+        """
+
+    cursor.execute(sql_fetch_query, (list_id, supermarket,))
+    lists_items = cursor.fetchall()
+
+    sql_fetch_query = """SELECT * FROM Lists WHERE lid=?"""
+    cursor.execute(sql_fetch_query, (list_id,))
+    list_name = cursor.fetchall()
+
+    total_price = 0
+    for list_items in lists_items:
+        quantity = int(list_items[4])
+        price = int(list_items[2])
+        total_price += (price * quantity)
+
+    conn.close()
+
+    return lists_items, list_name, total_price
 @app.route('/', methods=['GET'])
 def main():
     conn = sqlite3.connect(db_path)
@@ -58,9 +89,6 @@ def view_food(list_id):
 
 @app.route('/list/<int:list_id>', methods=['POST', 'GET'])
 def disp_list(list_id):
-    supermarket = 1
-    total_price = 0
-
     if request.method == 'POST':
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
@@ -81,31 +109,41 @@ def disp_list(list_id):
         conn.commit()
         conn.close()
 
+    lists_items, list_name, total_price = fetch_list_items(list_id)
+
+    return render_template('dispList.html',
+                           list_items_content=lists_items,
+                           list_name=list_name,
+                           total_price=total_price,
+                           list_id=list_id)
+
+@app.route('/updatequantity/<int:list_id>', methods=['POST'])
+def update_quantity(list_id):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity FROM ListsItems li, Items i, SupermarketsItems si
-    WHERE li.lid=? 
-    AND li.iid=i.iid 
-    AND li.iid=si.iid
-    AND si.sid=?
-    """
+    item_id = request.form.get('iid')
+    update_quantity = int(request.form.get('update'))
 
-    cursor.execute(sql_fetch_query, (list_id, supermarket,))
-    lists_items = cursor.fetchall()
+    sql_fetch_query = """SELECT lquantity FROM ListsItems WHERE iid=? AND lid=?"""
+    cursor.execute(sql_fetch_query, (item_id, list_id),)
+    quantity = cursor.fetchone()[0]
 
-    sql_fetch_query = """SELECT * FROM Lists WHERE lid=?"""
-    cursor.execute(sql_fetch_query, (list_id,))
-    list_name = cursor.fetchall()
+    updated_quantity = quantity + update_quantity
 
-    for list_items in lists_items:
-        quantity = int(list_items[4])
-        price = int(list_items[2])
-        total_price += (price*quantity)
+    update_query = """UPDATE ListsItems SET lquantity = ? WHERE iid=? AND lid=?"""
+    cursor.execute(update_query, (updated_quantity, item_id, list_id),)
+    conn.commit()
 
     conn.close()
 
-    return render_template('dispList.html', list_items_content=lists_items, list_name=list_name, total_price=total_price)
+    lists_items, list_name, total_price = fetch_list_items(list_id)
+
+    return render_template('dispList.html',
+                           list_items_content=lists_items,
+                           list_name=list_name,
+                           total_price=total_price,
+                           list_id=list_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
