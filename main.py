@@ -4,7 +4,7 @@ import sqlite3
 app = Flask (__name__)
 @app.route('/', methods=['GET'])
 def main():
-    conn = sqlite3.connect('shoppingDB.sqlite')
+    conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
     cursor = conn.cursor()
 
     sql_fetch_query = """SELECT * FROM Lists"""
@@ -14,7 +14,7 @@ def main():
     return render_template('index.html', list_content=Lists)
 @app.route('/addlist', methods=['POST', 'GET'])
 def addList():
-    conn = sqlite3.connect('shoppingDB.sqlite')
+    conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
     cursor = conn.cursor()
 
     received_data_obj = request.form
@@ -29,7 +29,7 @@ def addList():
     cursor.execute(sql_query, (data_model['lname'], data_model['ldate']))
     conn.commit()
 
-    conn = sqlite3.connect('shoppingDB.sqlite')
+    conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
     cursor = conn.cursor()
 
     sql_fetch_query = """SELECT * FROM Lists"""
@@ -40,7 +40,7 @@ def addList():
 
 @app.route('/viewfood', methods=['GET'])
 def viewFood():
-    conn = sqlite3.connect('shoppingDB.sqlite')
+    conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
     cursor = conn.cursor()
 
     sql_fetch_query = """SELECT * FROM Items"""
@@ -54,7 +54,7 @@ def dispList(list_id):
     #supermarket is set to new world (supermarket = 1)
     supermarket = 1
 
-    conn = sqlite3.connect('shoppingDB.sqlite')
+    conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
     cursor = conn.cursor()
 
     sql_fetch_query = """SELECT iname, iquantity, price, ipricetype FROM ListsItems li, Items i, SupermarketsItems si

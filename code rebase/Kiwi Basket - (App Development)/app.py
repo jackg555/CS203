@@ -29,9 +29,10 @@ def fetch_list_items(list_id):
 
     total_price = 0
     for list_items in lists_items:
-        quantity = int(list_items[4])
-        price = int(list_items[2])
+        quantity = float(list_items[4])
+        price = float(list_items[2])
         total_price += (price * quantity)
+        total_price = round(total_price, 2)
 
     conn.close()
 
@@ -90,6 +91,7 @@ def view_food(list_id):
 @app.route('/list/<int:list_id>', methods=['POST', 'GET'])
 def disp_list(list_id):
     if request.method == 'POST':
+        default_quantity = 1
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
@@ -99,9 +101,18 @@ def disp_list(list_id):
         cursor.execute(check_query, (list_id, food_id))
         count = cursor.fetchone()[0]
 
+        pricetype_query = """SELECT ipricetype FROM Items WHERE iid = ?"""
+        cursor.execute(pricetype_query, (food_id,))
+        ipricetype = cursor.fetchone()[0]
+
         if count == 0:
-            sql_query = """INSERT INTO ListsItems (lid, iid, lquantity) VALUES (?, ?, 1)"""
-            cursor.execute(sql_query, (list_id, food_id),)
+            if ipricetype == 'kg':
+                default_quantity = 0.1
+            elif ipricetype == 'ea':
+                default_quantity = 1
+
+            sql_query = """INSERT INTO ListsItems (lid, iid, lquantity) VALUES (?, ?, ?)"""
+            cursor.execute(sql_query, (list_id, food_id, default_quantity),)
         else:
             update_query = """UPDATE ListsItems SET lquantity = lquantity + 1 WHERE lid = ? AND iid = ?"""
             cursor.execute(update_query, (list_id, food_id))
@@ -123,7 +134,7 @@ def update_quantity(list_id):
     cursor = conn.cursor()
 
     item_id = request.form.get('iid')
-    update_quantity = int(request.form.get('update'))
+    update_quantity = float(request.form.get('update'))
 
     sql_fetch_query = """SELECT lquantity FROM ListsItems WHERE iid=? AND lid=?"""
     cursor.execute(sql_fetch_query, (item_id, list_id),)

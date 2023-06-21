@@ -44,7 +44,7 @@ cursor.execute(sql_query)
 sql_query = """CREATE TABLE IF NOT EXISTS ListsItems (
         lid integer NOT NULL, 
         iid integer NOT NULL, 
-        lquantity integer NOT NULL, 
+        lquantity float NOT NULL, 
         primary key (lid, iid), 
         foreign key (lid) references Lists(lid), 
         foreign key (iid) references Items(iid)
