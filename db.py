@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect('shoppingDB.sqlite')
+db_path = os.path.join(os.getcwd(), 'instance', 'shoppingDB.sqlite')
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 sql_query = """CREATE TABLE IF NOT EXISTS Items (
