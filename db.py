@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect('code rebase/Kiwi Basket - (App Development)/instance/shoppingDB.sqlite')
+db_path = os.path.join(os.getcwd(), 'instance', 'kiwibasketDB.sqlite')
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 sql_query = """CREATE TABLE IF NOT EXISTS Items (
@@ -44,7 +46,7 @@ sql_query = """CREATE TABLE IF NOT EXISTS ListsItems (
         iid integer NOT NULL, 
         lquantity float NOT NULL, 
         primary key (lid, iid), 
-        foreign key (lid) references Lists(lid), 
-        foreign key (iid) references Items(iid)
+        foreign key (lid) references Lists(lid) ON DELETE CASCADE, 
+        foreign key (iid) references Items(iid) ON DELETE CASCADE
         );"""
 cursor.execute(sql_query)

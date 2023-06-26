@@ -1,0 +1,21 @@
+body {
+  background: blue;
+}
+
+.head-container {
+    height: 90px;
+    width: 100%;
+}
+
+.logo-banner {
+    width: 100%;
+    background: white;
+    display: flex;
+    flex-direction: row;
+}
+
+.logo-title {
+    padding-left: 20px;
+    font-size: larger;
+    line-height: 0.5em;
+}

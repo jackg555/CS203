@@ -3,15 +3,19 @@ import os
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
-db_path = os.path.join(app.root_path, 'instance', 'shoppingDB.sqlite')
+db_path = os.path.join(app.root_path, 'instance', 'kiwibasketDB.sqlite')
 
-def fetch_list_items(list_id):
-    supermarket = get_best_supermarket(list_id)
-
+def create_connection():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity, li.iid, s.sname
+    return conn, cursor
+def fetch_list_items(list_id):
+    supermarket = get_best_supermarket(list_id)
+
+    conn, cursor = create_connection()
+
+    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity, li.iid, s.sname, s.slocation, s.snumber
         FROM ListsItems li, Items i, SupermarketsItems si, Supermarkets s
         WHERE li.lid=? 
         AND li.iid=i.iid 
@@ -39,8 +43,7 @@ def fetch_list_items(list_id):
     return lists_items, list_name, total_price
 
 def get_best_supermarket(list_id):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    conn, cursor = create_connection()
 
     test_query = """SELECT sid, price
                         FROM ListsItems li, Items i, SupermarketsItems si
@@ -59,7 +62,7 @@ def get_best_supermarket(list_id):
 
         for item in supermarket_data:
             sid = item[0]
-            price = int(item[1])
+            price = float(item[1])
 
             if sid in supermarket_dict:
                 supermarket_dict[sid] += price
@@ -80,21 +83,24 @@ def get_best_supermarket(list_id):
         conn.close()
 
         return str(supermarket)
-@app.route('/', methods=['GET'])
-def main():
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+
+def fetch_lists():
+    conn, cursor = create_connection()
 
     sql_fetch_query = """SELECT * FROM lists"""
     cursor.execute(sql_fetch_query)
     lists = cursor.fetchall()
 
+    return lists
+@app.route('/', methods=['GET'])
+def main():
+    lists = fetch_lists()
+
     return render_template('index.html', list_content=lists)
 
 @app.route('/addlist', methods=['POST', 'GET'])
 def add_list():
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    conn, cursor = create_connection()
 
     received_data_obj = request.form
     data_obj_to_save = dict(received_data_obj)
@@ -109,20 +115,14 @@ def add_list():
     conn.commit()
     conn.close()
 
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    sql_fetch_query = """SELECT * FROM lists"""
-    cursor.execute(sql_fetch_query)
-    lists = cursor.fetchall()
+    lists = fetch_lists()
 
     return render_template('index.html', list_content=lists)
 
 
 @app.route('/viewfood/<int:list_id>', methods=['GET'])
 def view_food(list_id):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    conn, cursor = create_connection()
 
     sql_fetch_query = """SELECT * FROM items"""
     cursor.execute(sql_fetch_query)
@@ -173,8 +173,7 @@ def disp_list(list_id):
 
 @app.route('/updatequantity/<int:list_id>', methods=['POST'])
 def update_quantity(list_id):
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
+    conn, cursor = create_connection()
 
     item_id = request.form.get('iid')
     update_quantity = float(request.form.get('update'))
@@ -202,6 +201,20 @@ def update_quantity(list_id):
                            list_name=list_name,
                            total_price=total_price,
                            list_id=list_id)
+
+@app.route('/deletelist/<int:list_id>', methods=['POST'])
+def delete_list(list_id):
+    conn, cursor = create_connection()
+
+    delete_query = """DELETE FROM Lists WHERE lid=?"""
+    cursor.execute(delete_query, (list_id,))
+
+    conn.commit()
+    conn.close()
+
+    lists = fetch_lists()
+
+    return render_template('index.html', list_content=lists)
 
 if __name__ == '__main__':
     app.run(debug=True)
