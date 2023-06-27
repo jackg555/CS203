@@ -12,7 +12,7 @@
 <body>
     <div class="head-container">
         <div class="logo-banner">
-            <a href="http://127.0.0.1:5000" class="link"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
+            <a href="https://kiwi-basket.onrender.com" class="link"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
             <div class="logo-title">
                 <h1>KIWI</h1>
                 <h3>BASKET</h3>
@@ -45,7 +45,7 @@
                                     {% endif %}
                                 </div>
                                 </br>
-                                <form action="http://127.0.0.1:5000/updatequantity/{{list_id}}" method="POST" class="give-margin">
+                                <form action="https://kiwi-basket.onrender.com/updatequantity/{{list_id}}" method="POST" class="give-margin">
                                     <input type="hidden" name="iid" value="{{ list_items[5] }}">
                                     <p>Quantity:</p>
                                     {% if list_items[3] == "kg" %}
@@ -68,7 +68,7 @@
                     <div class="col-md-3 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
-                                <a href="http://127.0.0.1:5000/viewfood/{{ list_name[0][0] }}" class="link">
+                                <a href="https://kiwi-basket.onrender.com/viewfood/{{ list_name[0][0] }}" class="link">
                                     <h5 class="card-title">Add Item</h5>
                                 </a>
                             </div>

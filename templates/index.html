@@ -16,7 +16,7 @@
     </script>
     <div class="head-container">
         <div class="logo-banner">
-            <a href="http://127.0.0.1:5000"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
+            <a href="https://kiwi-basket.onrender.com"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
             <div class="logo-title">
                 <h1>KIWI</h1>
                 <h3>BASKET</h3>
@@ -29,11 +29,11 @@
             <div class="col-md-3 mb-4 mt-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <a href="http://127.0.0.1:5000/list/{{ list[0] }}" class="link"><h5 class="card-title">{{ list[1] }}</h5></a>
+                        <a href="https://kiwi-basket.onrender.com/list/{{ list[0] }}" class="link"><h5 class="card-title">{{ list[1] }}</h5></a>
                         </br>
                         <p class="card-text">{{ list[2] }}</p>
                         </br>
-                        <form action="http://127.0.0.1:5000/deletelist/{{ list[0] }}" method="POST">
+                        <form action="https://kiwi-basket.onrender.com/{{ list[0] }}" method="POST">
                             <input type="submit"
                                    class="btn btn-danger"
                                    value="Delete"
@@ -46,7 +46,7 @@
             <div class="col-md-3 mb-4 mt-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <form action="http://127.0.0.1:5000/addlist" method="POST" onsubmit="return validateInputs()">
+                        <form action="https://kiwi-basket.onrender.com/addlist" method="POST" onsubmit="return validateInputs()">
                             <div class="form-group">
                                 <label for="lname">List Name:</label>
                                 <input type="text" name="lname" id="lname" class="form-control">
