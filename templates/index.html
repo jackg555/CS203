@@ -46,7 +46,7 @@
             <div class="col-md-3 mb-4 mt-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <form action="http://127.0.0.1:5000/addlist" method="POST">
+                        <form action="http://127.0.0.1:5000/addlist" method="POST" onsubmit="return validateInputs()">
                             <div class="form-group">
                                 <label for="lname">List Name:</label>
                                 <input type="text" name="lname" id="lname" class="form-control">
@@ -65,3 +65,21 @@
     </div>
 </body>
 </html>
+<script>
+function validateInputs() {
+    var listName = document.getElementById("lname").value;
+    var date = document.getElementById("ldate").value;
+
+    if (listName === "" && date === "") {
+        alert("You haven't filled in any required fields");
+        return false;
+    } else if (listName === "") {
+        alert("You haven't filled in your List Name");
+        return false;
+    } else if (date === "") {
+        alert("You haven't selected your List Date");
+        return false;
+    }
+    return true;
+}
+</script>
