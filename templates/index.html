@@ -16,7 +16,7 @@
     </script>
     <div class="head-container">
         <div class="logo-banner">
-            <img src="/static/images/logo.svg" alt="Kiwi Basket Logo">
+            <a href="http://127.0.0.1:5000"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
             <div class="logo-title">
                 <h1>KIWI</h1>
                 <h3>BASKET</h3>
@@ -29,8 +29,10 @@
             <div class="col-md-3 mb-4 mt-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <a href="http://127.0.0.1:5000/list/{{ list[0] }}"><h5 class="card-title">{{ list[1] }}</h5></a>
+                        <a href="http://127.0.0.1:5000/list/{{ list[0] }}" class="link"><h5 class="card-title">{{ list[1] }}</h5></a>
+                        </br>
                         <p class="card-text">{{ list[2] }}</p>
+                        </br>
                         <form action="http://127.0.0.1:5000/deletelist/{{ list[0] }}" method="POST">
                             <input type="submit"
                                    class="btn btn-danger"
@@ -54,7 +56,7 @@
                                 <input type="date" name="ldate" id="ldate" class="form-control">
                             </div>
                             </br>
-                            <button type="submit" class="btn btn-primary">Add List</button>
+                            <button type="submit">Add List</button>
                         </form>
                     </div>
                 </div>

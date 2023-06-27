@@ -47,6 +47,6 @@ sql_query = """CREATE TABLE IF NOT EXISTS ListsItems (
         lquantity float NOT NULL, 
         primary key (lid, iid), 
         foreign key (lid) references Lists(lid) ON DELETE CASCADE, 
-        foreign key (iid) references Items(iid) ON DELETE CASCADE
+        foreign key (iid) references Items(iid)
         );"""
 cursor.execute(sql_query)

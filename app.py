@@ -205,6 +205,7 @@ def update_quantity(list_id):
 @app.route('/deletelist/<int:list_id>', methods=['POST'])
 def delete_list(list_id):
     conn, cursor = create_connection()
+    cursor.execute("PRAGMA foreign_keys = ON")
 
     delete_query = """DELETE FROM Lists WHERE lid=?"""
     cursor.execute(delete_query, (list_id,))
