@@ -21,20 +21,21 @@ def fetch_list_items(list_id):
 
     # Fetches all the information about the items in the users list as well as the information
     # regarding the best supermarket
-    sql_fetch_query = """SELECT iname, iquantity, price, ipricetype, lquantity, li.iid, s.sname, s.slocation, s.snumber
+    sql_fetch_query = """SELECT item_name, item_quantity, price, item_price_type, list_quantity, 
+                                li.item_id, s.smarket_name, s.smarket_location, s.smarket_number
         FROM ListsItems li, Items i, SupermarketsItems si, Supermarkets s
-        WHERE li.lid=? 
-        AND li.iid=i.iid 
-        AND li.iid=si.iid
-        AND si.sid=?
-        AND s.sid=?
+        WHERE li.list_id=? 
+        AND li.item_id=i.item_id 
+        AND li.item_id=si.item_id
+        AND si.smarket_id=?
+        AND s.smarket_id=?
         """
 
     cursor.execute(sql_fetch_query, (list_id, supermarket, supermarket,))
     lists_items = cursor.fetchall()
 
     # Fetches all the data from the current list
-    sql_fetch_query = """SELECT * FROM Lists WHERE lid=?"""
+    sql_fetch_query = """SELECT * FROM Lists WHERE list_id=?"""
     cursor.execute(sql_fetch_query, (list_id,))
     list_name = cursor.fetchall()
 
@@ -55,11 +56,11 @@ def get_best_supermarket(list_id):
     conn, cursor = create_connection()
 
     # Fetches price of items at each supermarket based on items inside users list
-    sql_fetch_query = """SELECT sid, price
+    sql_fetch_query = """SELECT smarket_id, price
                         FROM ListsItems li, Items i, SupermarketsItems si
-                        WHERE li.lid=? 
-                        AND li.iid=i.iid 
-                        AND li.iid=si.iid
+                        WHERE li.list_id=? 
+                        AND li.item_id=i.item_id 
+                        AND li.item_id=si.item_id
                         """
 
     cursor.execute(sql_fetch_query, (list_id,))
@@ -102,7 +103,7 @@ def get_best_supermarket(list_id):
 def fetch_lists():
     conn, cursor = create_connection()
 
-    sql_fetch_query = """SELECT * FROM lists"""
+    sql_fetch_query = """SELECT * FROM Lists"""
     cursor.execute(sql_fetch_query)
     lists = cursor.fetchall()
 
@@ -124,13 +125,13 @@ def add_list():
     data_obj_to_save = dict(received_data_obj)
 
     data_model = {
-        'lname': data_obj_to_save['lname'],
-        'ldate': data_obj_to_save['ldate']
+        'list_name': data_obj_to_save['list_name'],
+        'list_date': data_obj_to_save['list_date']
     }
 
     # Receives list name and date from html form and inserts it into datebase
-    sql_query = """INSERT INTO lists (lname, ldate) VALUES (?, ?)"""
-    cursor.execute(sql_query, (data_model['lname'], data_model['ldate'],))
+    sql_query = """INSERT INTO Lists (list_name, list_date) VALUES (?, ?)"""
+    cursor.execute(sql_query, (data_model['list_name'], data_model['list_date'],))
     conn.commit()
     conn.close()
 
@@ -145,7 +146,7 @@ def view_food(list_id):
     conn, cursor = create_connection()
 
     # Fetches all the data inside items table
-    sql_fetch_query = """SELECT * FROM items"""
+    sql_fetch_query = """SELECT * FROM Items"""
     cursor.execute(sql_fetch_query)
     items = cursor.fetchall()
 
@@ -159,15 +160,15 @@ def disp_list(list_id):
         default_quantity = 1
 
         conn, cursor = create_connection()
-        food_id = request.form.get('iid')
+        food_id = request.form.get('item_id')
 
         # Checks if item already exists inside the list
-        check_query = """SELECT COUNT(*) FROM ListsItems WHERE lid = ? AND iid = ?"""
+        check_query = """SELECT COUNT(*) FROM ListsItems WHERE list_id = ? AND item_id = ?"""
         cursor.execute(check_query, (list_id, food_id,))
         count = cursor.fetchone()[0]
 
         # Fetches the price type (kg or ea)
-        pricetype_query = """SELECT ipricetype FROM Items WHERE iid = ?"""
+        pricetype_query = """SELECT item_price_type FROM Items WHERE item_id = ?"""
         cursor.execute(pricetype_query, (food_id,))
         ipricetype = cursor.fetchone()[0]
 
@@ -180,10 +181,11 @@ def disp_list(list_id):
         # Adds food item to the list with default quantity
         # If item already exists in the list the just add default quantity to item
         if count == 0:
-            sql_query = """INSERT INTO ListsItems (lid, iid, lquantity) VALUES (?, ?, ?)"""
+            sql_query = """INSERT INTO ListsItems (list_id, item_id, list_quantity) VALUES (?, ?, ?)"""
             cursor.execute(sql_query, (list_id, food_id, default_quantity,))
         else:
-            update_query = """UPDATE ListsItems SET lquantity = lquantity + ? WHERE lid = ? AND iid = ?"""
+            update_query = """UPDATE ListsItems SET list_quantity = list_quantity + ? 
+            WHERE list_id = ? AND item_id = ?"""
             cursor.execute(update_query, (default_quantity, list_id, food_id,))
 
         conn.commit()
@@ -204,11 +206,11 @@ def update_quantity(list_id):
     conn, cursor = create_connection()
 
     # Receives item id and update quantity
-    item_id = request.form.get('iid')
+    item_id = request.form.get('item_id')
     update_quantity = float(request.form.get('update'))
 
     # Fetches quantity from corresponding item
-    sql_fetch_query = """SELECT lquantity FROM ListsItems WHERE iid=? AND lid=?"""
+    sql_fetch_query = """SELECT list_quantity FROM ListsItems WHERE item_id=? AND list_id=?"""
     cursor.execute(sql_fetch_query, (item_id, list_id,))
     quantity = cursor.fetchone()[0]
 
@@ -217,10 +219,10 @@ def update_quantity(list_id):
 
     # If quantity is 0 then delete item from list else update to new quantity
     if updated_quantity <= 0.001:
-        delete_query = """DELETE FROM ListsItems WHERE iid=? AND lid=?"""
+        delete_query = """DELETE FROM ListsItems WHERE item_id=? AND list_id=?"""
         cursor.execute(delete_query, (item_id, list_id,))
     else:
-        update_query = """UPDATE ListsItems SET lquantity = ? WHERE iid=? AND lid=?"""
+        update_query = """UPDATE ListsItems SET list_quantity = ? WHERE item_id=? AND list_id=?"""
         cursor.execute(update_query, (updated_quantity, item_id, list_id,))
 
     conn.commit()
@@ -242,7 +244,7 @@ def delete_list(list_id):
     cursor.execute("PRAGMA foreign_keys = ON")
 
     # Delete list with corresponding list id
-    delete_query = """DELETE FROM Lists WHERE lid=?"""
+    delete_query = """DELETE FROM Lists WHERE list_id=?"""
     cursor.execute(delete_query, (list_id,))
 
     conn.commit()

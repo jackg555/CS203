@@ -6,47 +6,47 @@ conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 sql_query = """CREATE TABLE IF NOT EXISTS Items (
-        iid integer NOT NULL, 
-        iname text NOT NULL,
-        iquantity text NOT NULL,
-        ipricetype text NOT NULL,
-        primary key (iid)
+        item_id integer NOT NULL, 
+        item_name text NOT NULL,
+        item_quantity text NOT NULL,
+        item_price_type text NOT NULL,
+        primary key (item_id)
         );"""
 cursor.execute(sql_query)
 
 sql_query = """CREATE TABLE IF NOT EXISTS Supermarkets (
-        sid integer NOT NULL, 
-        sname text NOT NULL,
-        slocation text NOT NULL,
-        snumber integer NOT NULL,
-        primary key (sid)
+        smarket_id integer NOT NULL, 
+        smarket_name text NOT NULL,
+        smarket_location text NOT NULL,
+        smarket_number integer NOT NULL,
+        primary key (smarket_id)
         );"""
 cursor.execute(sql_query)
 
 sql_query = """CREATE TABLE IF NOT EXISTS Lists (
-        lid integer NOT NULL, 
-        lname text NOT NULL, 
-        ldate text NOT NULL,
-        primary key (lid)
+        list_id integer NOT NULL, 
+        list_name text NOT NULL, 
+        list_date text NOT NULL,
+        primary key (list_id)
         );"""
 cursor.execute(sql_query)
 
 sql_query = """CREATE TABLE IF NOT EXISTS SupermarketsItems (
-        iid integer NOT NULL, 
-        sid integer NOT NULL, 
-        price text NOT NULL,
-        primary key (iid, sid), 
-        foreign key (iid) references Items(iid),
-        foreign key (sid) references Supermarkets(sid)
+        item_id integer NOT NULL, 
+        smarket_id integer NOT NULL, 
+        price float NOT NULL,
+        primary key (item_id, smarket_id), 
+        foreign key (item_id) references Items(item_id),
+        foreign key (smarket_id) references Supermarkets(smarket_id)
         );"""
 cursor.execute(sql_query)
 
 sql_query = """CREATE TABLE IF NOT EXISTS ListsItems (
-        lid integer NOT NULL, 
-        iid integer NOT NULL, 
-        lquantity float NOT NULL, 
-        primary key (lid, iid), 
-        foreign key (lid) references Lists(lid) ON DELETE CASCADE, 
-        foreign key (iid) references Items(iid)
+        list_id integer NOT NULL, 
+        item_id integer NOT NULL, 
+        list_quantity float NOT NULL, 
+        primary key (list_id, item_id), 
+        foreign key (list_id) references Lists(list_id) ON DELETE CASCADE, 
+        foreign key (item_id) references Items(item_id)
         );"""
 cursor.execute(sql_query)
