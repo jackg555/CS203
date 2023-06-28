@@ -16,7 +16,7 @@ def create_connection():
 def fetch_list_items(list_id):
     # Calls get_best_supermarket function that returns the
     # cheapest supermarket to shop at based on items in the users list
-    supermarket = get_best_supermarket(list_id)
+    supermarket, money_saved = get_best_supermarket(list_id)
     conn, cursor = create_connection()
 
     # Fetches all the information about the items in the users list as well as the information
@@ -49,7 +49,7 @@ def fetch_list_items(list_id):
 
     conn.close()
 
-    return lists_items, list_name, total_price
+    return lists_items, list_name, total_price, money_saved
 
 # Function that calculates the best supermarket to shop at based on the food inside the users list
 def get_best_supermarket(list_id):
@@ -85,6 +85,7 @@ def get_best_supermarket(list_id):
         # Makes default value for lowest_total = to the first ([0]) value inside supermarket_dict
         values = list(supermarket_dict.values())
         lowest_total = values[0]
+        highest_total = 0
         supermarket = 1
 
         # Calculates which supermarket is the cheapest
@@ -94,10 +95,14 @@ def get_best_supermarket(list_id):
             if (item_total < lowest_total):
                 lowest_total = item_total
                 supermarket = key
+            if (item_total > highest_total):
+                highest_total = item_total
+
+            money_saved = highest_total - lowest_total
 
         conn.close()
 
-        return str(supermarket)
+        return str(supermarket), int(money_saved)
 
 # Function that fetches all the lists that have been created
 def fetch_lists():
@@ -192,13 +197,14 @@ def disp_list(list_id):
         conn.close()
 
     # Fetches current list information then displays list
-    lists_items, list_name, total_price = fetch_list_items(list_id)
+    lists_items, list_name, total_price, money_saved = fetch_list_items(list_id)
 
     return render_template('dispList.html',
                            list_items_content=lists_items,
                            list_name=list_name,
                            total_price=total_price,
-                           list_id=list_id)
+                           list_id=list_id,
+                           money_saved=money_saved)
 
 # Updates the quantity of a food item
 @app.route('/updatequantity/<int:list_id>', methods=['POST'])
@@ -229,13 +235,14 @@ def update_quantity(list_id):
     conn.close()
 
     # Fetches current list information then displays list
-    lists_items, list_name, total_price = fetch_list_items(list_id)
+    lists_items, list_name, total_price, money_saved = fetch_list_items(list_id)
 
     return render_template('dispList.html',
                            list_items_content=lists_items,
                            list_name=list_name,
                            total_price=total_price,
-                           list_id=list_id)
+                           list_id=list_id,
+                           money_saved=money_saved)
 
 # Deletes a list from lists table
 @app.route('/deletelist/<int:list_id>', methods=['POST'])
