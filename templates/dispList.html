@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>{{ list_name[0][1] }}</title>
@@ -9,32 +10,50 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
+
 <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous">
+    </script>
+
+    <!-- Head container that holds logo and title -->
     <div class="head-container">
         <div class="logo-banner">
-            <a href="https://kiwi-basket.onrender.com" class="link"><img src="/static/images/logo.svg" alt="Kiwi Basket Logo"></a>
+            <a href="http://127.0.0.1:5000" class="link">
+                <img src="/static/images/logo.svg" alt="Kiwi Basket Logo">
+            </a>
             <div class="logo-title">
                 <h1>KIWI</h1>
                 <h3>BASKET</h3>
             </div>
         </div>
     </div>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
+
+                <!-- Displays list name and date -->
                 <h1>{{ list_name[0][1] }}</h1>
                 <h2>{{ list_name[0][2] }}</h2>
                 </br>
                 <div class="row">
                     {% for list_items in list_items_content %}
                     <div class="col-md-3 mb-4">
+
+                        <!-- Creates a card for each food item inside the users list -->
                         <div class="card">
                             <div class="card-body">
+
+                                <!-- Food item title -->
                                 <div>
                                     <h5 class="card-title">Item: {{ list_items[0] }}</h5>
                                     <p>{{ list_items[1] }}</p>
                                 </div>
                                 </br>
+
+                                <!-- Displays price with correct quantity type to the user (kg or ea) -->
                                 <div>
                                     <p>Price: ${{ list_items[2] }}</p>
                                     {% if list_items[3] == "kg" %}
@@ -45,30 +64,44 @@
                                     {% endif %}
                                 </div>
                                 </br>
-                                <form action="https://kiwi-basket.onrender.com/updatequantity/{{list_id}}" method="POST" class="give-margin">
+
+                                <!-- Displays update quantity buttons -->
+                                <form action="http://127.0.0.1:5000/updatequantity/{{list_id}}"
+                                      method="POST"
+                                      class="give-margin">
                                     <input type="hidden" name="iid" value="{{ list_items[5] }}">
                                     <p>Quantity:</p>
+
+                                    <!-- Update the quantity of item if quantity = kg -->
                                     {% if list_items[3] == "kg" %}
                                     <button type="submit" name="update" value="0.1">+</button>
                                     {{ '%.1f' | format(list_items[4]) }}kgs
                                     <button type="submit" name="update" value="-0.1">-</button>
                                     {% endif %}
+
+                                    <!-- Update the quantity of item if quantity = ea -->
                                     {% if list_items[3] == "ea" %}
                                     <button type="submit" name="update" value="1">+</button>
                                     {{ list_items[4]|int }}
                                     <button type="submit" name="update" value="-1">-</button>
                                     {% endif %}
                                     </br>
-                                    <button class="remove-item-btn" type="submit" name="update" value="-1000">Remove Item</button>
+
+                                    <!-- Removes item from the list -->
+                                    <button class="remove-item-btn" type="submit" name="update" value="-1000">
+                                        Remove Item
+                                    </button>
                                 </form>
                             </div>
                         </div>
                     </div>
                     {% endfor %}
                     <div class="col-md-3 mb-4">
+
+                        <!-- Creates an add item card -->
                         <div class="card h-100">
                             <div class="card-body">
-                                <a href="https://kiwi-basket.onrender.com/viewfood/{{ list_name[0][0] }}" class="link">
+                                <a href="http://127.0.0.1:5000/viewfood/{{ list_name[0][0] }}" class="link">
                                     <h5 class="card-title">Add Item</h5>
                                 </a>
                             </div>
@@ -76,16 +109,25 @@
                     </div>
                 </div>
 
+                <!-- Displays the best supermarket to shop at -->
                 {% if list_items_content %}
                     <h4>The Cheapest Supermarket is: </h4>
+
+                    <!-- Supermarket name -->
                     <p>{{ list_items_content[0][6] }},</p>
                     </br>
+
+                    <!-- Supermarket location -->
                     <p>{{ list_items_content[0][7] }},</p>
                     </br>
+
+                    <!-- Supermarket number -->
                     <p>{{ list_items_content[0][8] }}</p>
                     </br>
                     </br>
                 {% endif %}
+
+                <!-- Displays total of all the items in the list -->
                 <h2>Total: ${{ total_price }}</h2>
             </div>
         </div>
